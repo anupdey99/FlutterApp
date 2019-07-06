@@ -7,10 +7,19 @@ import 'package:flutter_app/app_screens/first_screen.dart';
 void main() => runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Simple Interest Calculator",
+      title: "Interest Calculator",
       home: SimpleInterestForm(),
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Colors.indigo,
+        accentColor: Colors.indigoAccent
+      )
     )
 );
+
+
+
+// Test only
 
 class MainApp extends StatelessWidget {
   @override
