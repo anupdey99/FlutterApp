@@ -1,23 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/app_screens/FavoriteCity.dart';
+import 'package:flutter_app/app_screens/NoteDetails.dart';
 import 'package:flutter_app/app_screens/SimpleInterestForm.dart';
 import 'package:flutter_app/app_screens/first_screen.dart';
+import 'package:flutter_app/app_screens/NoteList.dart';
 
 
 void main() => runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Interest Calculator",
-      home: SimpleInterestForm(),
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Colors.indigo,
-        accentColor: Colors.indigoAccent
-      )
-    )
+  NoteApp()
+    // MaterialApp(
+    //   debugShowCheckedModeBanner: false,
+    //   title: "Interest Calculator",
+    //   home: SimpleInterestForm(),
+    //   theme: ThemeData(
+    //     brightness: Brightness.dark,
+    //     primaryColor: Colors.indigo,
+    //     accentColor: Colors.indigoAccent
+    //   )
+    // )
 );
 
-
+class NoteApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: "NoteKeeper",
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple
+      ),
+      home: NoteList(),
+    );
+  }
+}
 
 // Test only
 
