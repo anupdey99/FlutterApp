@@ -1,27 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/models/note.dart';
 
 class NoteDetails extends StatefulWidget {
-  String appBarTitle;
+  final String appBarTitle;
+  final Note note;
 
-  NoteDetails(this.appBarTitle);
+  NoteDetails(this.appBarTitle, this.note);
 
   @override
   State<StatefulWidget> createState() {
-    return _NoteDetailsState(appBarTitle);
+    return _NoteDetailsState(appBarTitle, note);
   }
 }
 
 class _NoteDetailsState extends State<NoteDetails> {
   String appBarTitle;
+  Note note;
   static var _priorities = ['High', 'Low'];
 
-  _NoteDetailsState(this.appBarTitle);
+  _NoteDetailsState(this.appBarTitle, this.note);
 
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
     TextEditingController titleController = TextEditingController();
     TextEditingController descriptionController = TextEditingController();
+
+    titleController.text = note.title;
+    descriptionController.text = note.description;
 
     return WillPopScope(
         onWillPop: () {
@@ -137,6 +143,17 @@ class _NoteDetailsState extends State<NoteDetails> {
             ),
           ),
         ));
+  }
+
+  void updatePriorityAsInt(String value) {
+    switch (value) {
+      case "High":
+        note.priority = 1;
+        break;
+      case "Low":
+        note.priority = 2;
+        break;
+    }
   }
 
   void _moveToLastScreen() {
