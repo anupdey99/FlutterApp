@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Utils/database_helper.dart';
 import 'package:flutter_app/models/note.dart';
+import 'package:intl/intl.dart';
 
 class NoteDetails extends StatefulWidget {
   final String appBarTitle;
@@ -19,12 +21,13 @@ class _NoteDetailsState extends State<NoteDetails> {
   static var _priorities = ['High', 'Low'];
 
   _NoteDetailsState(this.appBarTitle, this.note);
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  DatabaseHelper _databaseHelper = DatabaseHelper();
 
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
-    TextEditingController titleController = TextEditingController();
-    TextEditingController descriptionController = TextEditingController();
 
     titleController.text = note.title;
     descriptionController.text = note.description;
@@ -58,10 +61,11 @@ class _NoteDetailsState extends State<NoteDetails> {
                       );
                     }).toList(),
                     style: textStyle,
-                    value: _priorities[1],
+                    value: getPriorityAsString(note.priority),
                     onChanged: (value) {
                       setState(() {
                         debugPrint("User selected $value");
+                        updatePriorityAsInt(value);
                       });
                     },
                   ),
@@ -79,6 +83,7 @@ class _NoteDetailsState extends State<NoteDetails> {
                             borderRadius: BorderRadius.circular(5.0))),
                     onChanged: (value) {
                       debugPrint("Title changed");
+                      _updateTitle();
                     },
                   ),
                 ),
@@ -95,6 +100,7 @@ class _NoteDetailsState extends State<NoteDetails> {
                             borderRadius: BorderRadius.circular(5.0))),
                     onChanged: (value) {
                       debugPrint("Description changed");
+                      _updateDescription();
                     },
                   ),
                 ),
@@ -114,6 +120,7 @@ class _NoteDetailsState extends State<NoteDetails> {
                           onPressed: () {
                             setState(() {
                               debugPrint("Save button pressed");
+                              _saveNote();
                             });
                           },
                         ),
@@ -132,6 +139,7 @@ class _NoteDetailsState extends State<NoteDetails> {
                           onPressed: () {
                             setState(() {
                               debugPrint("Delete button pressed");
+                              _deleteNote();
                             });
                           },
                         ),
@@ -156,7 +164,76 @@ class _NoteDetailsState extends State<NoteDetails> {
     }
   }
 
+  String getPriorityAsString(int value) {
+    String priority;
+    switch (value) {
+      case 1:
+        priority = _priorities[0];
+        break;
+      case 2:
+        priority = _priorities[1];
+        break;
+    }
+    return priority;
+  }
+
+  void _updateTitle() {
+    note.title = titleController.text;
+  }
+
+  void _updateDescription() {
+    note.description = descriptionController.text;
+  }
+
+  void _saveNote() async {
+
+    _moveToLastScreen();
+
+    note.date = DateFormat.yMMMd().format(DateTime.now());
+    int result;
+    if (note.id != null) {
+      result = await _databaseHelper.updateNote(note);
+    } else {
+      result = await _databaseHelper.insetNote(note);
+    }
+
+    if (result != 0) {
+      _showAllertDialog("Status", "Note Saved Successfully");
+    } else {
+      _showAllertDialog("Status", "Problem Saving Note");
+    }
+
+    
+  }
+
+  void _deleteNote() async {
+
+    _moveToLastScreen();
+
+    if (note.id == null) {
+      _showAllertDialog("Status", "No Note was Deleted");
+      return;
+    }
+
+    int result = await _databaseHelper.deleteNote(note.id);
+    if (result != 0) {
+      _showAllertDialog("Status", "Note Deleted Successfully");
+    } else {
+      _showAllertDialog("Status", "Something went wrong!");
+    }
+
+    
+  }
+
+  void _showAllertDialog(String title, String message) {
+    AlertDialog alertDialog = AlertDialog(
+      title: Text(title),
+      content: Text(message),
+    );
+    showDialog(context: context, builder: (_) => alertDialog);
+  }
+
   void _moveToLastScreen() {
-    Navigator.pop(context);
+    Navigator.pop(context, true);
   }
 }

@@ -77,10 +77,14 @@ class _NoteListState extends State<NoteList> {
     );
   }
 
-  void _navigateToDetails(String title, Note note) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
+  void _navigateToDetails(String title, Note note) async {
+    bool result = await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return NoteDetails(title, note);
     }));
+
+    if (result == true) {
+      updateListView();
+    }
   }
 
   Color getPriorityColor(int priority) {

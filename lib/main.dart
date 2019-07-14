@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/app_screens/FavoriteCity.dart';
-import 'package:flutter_app/app_screens/NoteDetails.dart';
+import 'package:flutter_app/app_screens/note_details.dart';
 import 'package:flutter_app/app_screens/SimpleInterestForm.dart';
 import 'package:flutter_app/app_screens/first_screen.dart';
 import 'package:flutter_app/app_screens/note_list.dart';
